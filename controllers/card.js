@@ -1,5 +1,9 @@
 const Card = require('../models/card');
 
+const ERROR_CODE = 400;
+const NOT_FOUND = 404;
+
+
 module.exports.createCard = async (req, res) => {
   const owner = req.user._id;
   const { name, link } = req.body;
@@ -9,7 +13,7 @@ module.exports.createCard = async (req, res) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные карточки' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
@@ -34,14 +38,14 @@ module.exports.deleteCard = async (req, res) => {
     );
     if (!card) {
       return res
-        .status(404)
+        .status(NOT_FOUND)
         .send({ message: 'Такой карточки нет' });
     }
     return res.status(200).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные запроса' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
@@ -58,14 +62,14 @@ module.exports.putLike = async (req, res) => {
     );
     if (!card) {
       return res
-        .status(404)
+        .status(NOT_FOUND)
         .send({ message: 'Такой карточки нет' });
     }
     return res.status(200).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные запроса' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
@@ -82,14 +86,14 @@ module.exports.deleteLike = async (req, res) => {
     );
     if (!card) {
       return res
-        .status(404)
+        .status(NOT_FOUND)
         .send({ message: 'Такой карточки нет' });
     }
     return res.status(200).send(card);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные запроса' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });

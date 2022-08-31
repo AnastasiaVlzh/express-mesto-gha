@@ -1,5 +1,8 @@
 const User = require('../models/user');
 
+const ERROR_CODE = 400;
+const NOT_FOUND = 404
+
 module.exports.createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
   try {
@@ -8,7 +11,7 @@ module.exports.createUser = async (req, res) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные пользователя' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
@@ -30,14 +33,14 @@ module.exports.getUserById = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res
-        .status(404)
+        .status(NOT_FOUND)
         .send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Невалидный ID пользователя' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
@@ -55,14 +58,14 @@ module.exports.updateUser = async (req, res) => {
     });
     if (!user) {
       return res
-        .status(404)
+        .status(NOT_FOUND)
         .send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные пользователя' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
@@ -80,14 +83,14 @@ module.exports.updateAvatar = async (req, res) => {
     });
     if (!user) {
       return res
-        .status(404)
+        .status(NOT_FOUND)
         .send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(400)
+        .status(ERROR_CODE)
         .send({ message: 'Некорректные данные пользователя' });
     }
     return res.status(500).send({ message: 'Произошла ошибка' });
