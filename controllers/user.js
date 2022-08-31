@@ -1,7 +1,8 @@
 const User = require('../models/user');
 
 const ERROR_CODE = 400;
-const NOT_FOUND = 404
+const NOT_FOUND = 404;
+const SERVER_ERROR = 500;
 
 module.exports.createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
@@ -14,7 +15,7 @@ module.exports.createUser = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные пользователя' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -23,7 +24,7 @@ module.exports.getUsers = async (req, res) => {
     const users = await User.find({});
     return res.status(200).send(users);
   } catch (err) {
-    return res.status(500).send({ message: 'Произошла ошибка', ...err });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка', ...err });
   }
 };
 
@@ -43,7 +44,7 @@ module.exports.getUserById = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Невалидный ID пользователя' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -68,7 +69,7 @@ module.exports.updateUser = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные пользователя' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -93,6 +94,6 @@ module.exports.updateAvatar = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные пользователя' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };

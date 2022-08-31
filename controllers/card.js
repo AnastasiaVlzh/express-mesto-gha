@@ -2,8 +2,7 @@ const Card = require('../models/card');
 
 const ERROR_CODE = 400;
 const NOT_FOUND = 404;
-
-
+const SERVER_ERROR = 500;
 module.exports.createCard = async (req, res) => {
   const owner = req.user._id;
   const { name, link } = req.body;
@@ -16,7 +15,7 @@ module.exports.createCard = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные карточки' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -25,7 +24,7 @@ module.exports.getCards = async (req, res) => {
     const card = await Card.find({});
     return res.status(200).send(card);
   } catch (err) {
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -48,7 +47,7 @@ module.exports.deleteCard = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные запроса' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -72,7 +71,7 @@ module.exports.putLike = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные запроса' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
 
@@ -96,6 +95,6 @@ module.exports.deleteLike = async (req, res) => {
         .status(ERROR_CODE)
         .send({ message: 'Некорректные данные запроса' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка' });
+    return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
   }
 };
