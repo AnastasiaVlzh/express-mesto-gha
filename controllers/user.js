@@ -1,6 +1,6 @@
 const User = require('../models/user');
 
-const ERROR_CODE = 400;
+const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const SERVER_ERROR = 500;
 
@@ -12,7 +12,7 @@ module.exports.createUser = async (req, res) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные пользователя' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -41,7 +41,7 @@ module.exports.getUserById = async (req, res) => {
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Невалидный ID пользователя' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -55,7 +55,6 @@ module.exports.updateUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(id, { name, about }, {
       new: true,
       runValidators: true,
-      upsert: true,
     });
     if (!user) {
       return res
@@ -66,7 +65,7 @@ module.exports.updateUser = async (req, res) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные пользователя' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -80,7 +79,6 @@ module.exports.updateAvatar = async (req, res) => {
     const user = await User.findByIdAndUpdate(id, { avatar }, {
       new: true,
       runValidators: true,
-      upsert: true,
     });
     if (!user) {
       return res
@@ -91,7 +89,7 @@ module.exports.updateAvatar = async (req, res) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные пользователя' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });

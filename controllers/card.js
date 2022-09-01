@@ -1,8 +1,9 @@
 const Card = require('../models/card');
 
-const ERROR_CODE = 400;
+const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const SERVER_ERROR = 500;
+
 module.exports.createCard = async (req, res) => {
   const owner = req.user._id;
   const { name, link } = req.body;
@@ -12,7 +13,7 @@ module.exports.createCard = async (req, res) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные карточки' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -44,7 +45,7 @@ module.exports.deleteCard = async (req, res) => {
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные запроса' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -68,7 +69,7 @@ module.exports.putLike = async (req, res) => {
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные запроса' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -92,7 +93,7 @@ module.exports.deleteLike = async (req, res) => {
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res
-        .status(ERROR_CODE)
+        .status(BAD_REQUEST)
         .send({ message: 'Некорректные данные запроса' });
     }
     return res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
