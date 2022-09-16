@@ -1,28 +1,64 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const { celebrate, Joi, errors } = require('celebrate');
+require('dotenv').config();
 const userRoutes = require('./routes/user');
 const cardRoutes = require('./routes/card');
+const {
+  login,
+  createUser,
+} = require('./controllers/user');
+const { auth } = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
+
 const app = express();
+
+app.use(cookieParser());
+
+app.post('/signin', express.json(), celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+
+app.post('/signup', express.json(), celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi
+      .string()
+      // eslint-disable-next-line no-useless-escape
+      .regex(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
+
+app.use(auth);
 
 app.use((req, res, next) => {
   console.log(req.method, req.url);
   next();
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '630b6d27e21173e3b622bb1c',
-  };
-
-  next();
-});
-
 app.use(userRoutes);
 app.use(cardRoutes);
+
 app.all('*', (req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
+});
+
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
+
+  res.status(statusCode).send({ message });
+  next();
 });
 
 async function main() {
