@@ -11,6 +11,8 @@ const {
 
 userRoutes.get('/users', express.json(), getUsers);
 
+userRoutes.get('/users/me', express.json(), getUserMe);
+
 userRoutes.get('/users/:userId', express.json(), celebrate({
   params: Joi.object().keys({
     userId: Joi.string().alphanum().length(24),
@@ -23,8 +25,6 @@ userRoutes.patch('/users/me', express.json(), celebrate({
     about: Joi.string().required().min(2).max(30),
   }),
 }), updateUser);
-
-userRoutes.get('/users/me', express.json(), getUserMe);
 
 userRoutes.patch('/users/me/avatar', express.json(), celebrate({
   body: Joi.object().keys({
