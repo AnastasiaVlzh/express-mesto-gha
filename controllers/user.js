@@ -134,6 +134,6 @@ module.exports.login = async (req, res, next) => {
     });
     return res.status(200).send({ data: user.toJSON() });
   } catch (err) {
-    return next(new AuthError({ message: err.message }));
+    return next(new ServerError('Произошла ошибка'));
   }
 };
