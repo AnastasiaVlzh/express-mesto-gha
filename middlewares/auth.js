@@ -5,10 +5,9 @@ module.exports.auth = (req, res, next) => {
   let payload;
 
   try {
-    console.log(process.env['JWT_SECRET']);
     payload = jwt.verify(token, process.env['JWT_SECRET']);
   } catch (err) {
-    next(err);
+    next(new AuthError('Ошибка авторизации'));
   }
   req.user = payload;
   next();
