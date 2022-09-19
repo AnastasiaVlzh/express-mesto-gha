@@ -41,8 +41,9 @@ module.exports.getUsers = async (req, res, next) => {
     const users = await User.find({});
     return res.status(200).send(users);
   } catch (err) {
-    return next(new ServerError('Произошла ошибка'));
+    next(new AuthError('Ошибка авторизации'));
   }
+  return next(new ServerError('Произошла ошибка'));
 };
 
 module.exports.getUserMe = async (req, res, next) => {
@@ -65,7 +66,7 @@ module.exports.getUserById = async (req, res, next) => {
     if (!user) {
       return next(new NotFoundError('Пользователь не найден'));
     }
-    res.status(200).send(user);
+    return res.status(200).send(user);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return next(new BadRequestError('Невалидный ID пользователя'));
@@ -125,7 +126,7 @@ module.exports.login = async (req, res, next) => {
     if (!userValid) {
       return next(new AuthError('Неправильные почта или пароль'));
     }
-    const token = jwt.sign({ _id: user._id }, process.env['JWT_SECRET']);
+    const token = jwt.sign({ _id: user._id }, process.env['JWT.SECRET']);
 
     res.cookie('jwt', token, {
       maxAge: 604800,

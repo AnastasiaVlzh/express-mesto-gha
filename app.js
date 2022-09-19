@@ -10,6 +10,7 @@ const {
   createUser,
 } = require('./controllers/user');
 const { auth } = require('./middlewares/auth');
+const NotFoundError = require('./errors/not-found-err');
 
 const { PORT = 3000 } = process.env;
 
@@ -39,16 +40,11 @@ app.post('/signup', express.json(), celebrate({
 
 app.use(auth);
 
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
-
 app.use(userRoutes);
 app.use(cardRoutes);
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
+app.all('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 app.use(errors());
